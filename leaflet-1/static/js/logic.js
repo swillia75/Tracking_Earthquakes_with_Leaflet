@@ -1,18 +1,63 @@
 //Create function to map earthquake data
 
-function createFeatures(earthquakeData) {
+function createFeatures(data.features) {
 
     // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
 
-  function onEachFeature(feature, layer) {
-    layer.bindPopup("<h3>" + feature.properties.place +
-    "</h3><h3>Date/Time:" + new Date(feature.properties.time) + 
-    "</h3><h3>Magnitude:" + (feature.properties.mag) + "</h3>");
+  function onEachFeature(feature) {
+
+    
+    for (var i = 0; i < earthquakes.length; i++) {
+
+      var color = "";
+
+      if (earthquakes[i].mag > 7) {
+        color = "red";
+      }
+      else if (earthquakes[i].mag > 6) {
+        color = "orange";
+      }
+      else if (earthquakes[i].mag > 5) {
+        color = "yellow";
+      }
+      else if (earthquakes[i].mag > 4) {
+        color = "brown";
+      }
+      else if (earthquakes[i].mag > 3) {
+        color = "blue";
+      }
+      else if (earthquakes[i].mag > 2) {
+        color = "purple";
+      }
+      else if (earthquakes[i].mag > 1) {
+        color = "green";
+      }
+      else {
+      color = "black";
+      }
+  
+      // Add circles to map
+      L.circle(earthquakes[i].place, {
+        fillOpacity: 0.75,
+        color: "white",
+        fillColor: color,
+        // Adjust radius
+        radius: earthquakes[i].mag * 1500
+      }).bindPopup("<h3>" + feature.properties.place +
+      "</h3><h3>Date/Time:" + new Date(feature.properties.time) + 
+      "</h3><h3>Magnitude:" + (feature.properties.mag) + "</h3>");
+  
+    };
+  
+    createMap(earthquakes);
   };
+  
+
+
 
   //Create GeoJSON layer for map
-  var earthquakes = L.geoJSON(earthquakeData, {
+  var earthquakes = L.geoJSON(earthquakes, {
       onEachFeature: onEachFeature
   });
 
@@ -57,6 +102,10 @@ function createMap(earthquakes) {
     collapsed: false
   }).addTo(myMap);
 };
+
+
+  
+
 
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
