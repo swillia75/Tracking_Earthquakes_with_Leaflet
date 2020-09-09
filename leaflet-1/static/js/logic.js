@@ -1,23 +1,15 @@
-//Get query url for all earth quakes for last 7 days
-var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-
-//Perform get request to url
-d3.json(url, function(data){
-    //Send data.features object to createfeatures function
-    createFeatures(data.features);
-});
-
 //Create function to map earthquake data
 
-function createFeatures(earthquakeData);
+function createFeatures(earthquakeData) {
 
     // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
 
   function onEachFeature(feature, layer) {
     layer.bindPopup("<h3>" + feature.properties.place +
-    "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-  }
+    "</h3><h3>Date/Time:" + new Date(feature.properties.time) + 
+    "</h3><h3>Magnitude:" + (feature.properties.mag) + "</h3>");
+  };
 
   //Create GeoJSON layer for map
   var earthquakes = L.geoJSON(earthquakeData, {
@@ -41,7 +33,35 @@ function createMap(earthquakes) {
   });
 
   //Create baseMap to hold streetmap
-  var baseMap = {"Street Map": streetmap
+  var baseMaps = {"Street Map": streetmap
+  };
+
+  // Create overlay object to hold our overlay layer
+  var overlayMaps = {
+    Earthquakes: earthquakes
+  };
+
+  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  var myMap = L.map("map", {
+    center: [
+      37.09, -95.71
+    ],
+    zoom: 5,
+    layers: [streetmap, earthquakes]
+  });
+
+  // Create a layer control
+  // Pass in our baseMaps and overlayMaps
+  // Add the layer control to the map
+  L.control.layers(baseMaps, overlayMaps, {
+    collapsed: false
+  }).addTo(myMap);
 };
 
-}
+var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+
+//Perform get request to url
+d3.json(url, function(data){
+    //Send data.features object to createfeatures function
+    createFeatures(data.features);
+});
