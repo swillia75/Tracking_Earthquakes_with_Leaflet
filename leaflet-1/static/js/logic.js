@@ -38,40 +38,47 @@ function selectColor (earthquakes) {
 
 //Create function to map earthquake data
 
-function createFeatures(earthquakes) {
+function createMarkers(earthquakes) {
+
+  var features = earthquakes.features;
 
 //     // Define a function we want to run once for each feature in the features array
 //   // Give each feature a popup describing the place and time of the earthquake
-
-  function onEachFeature(earthquakes, layer) {
+  console.log(features);
+  //function onEachFeature(earthquakes) {
      // Add circles to map
+  var quakeMarkers = [];
+    
+  for (var i = 0; i < features.length; i++) {
 
-     console.log(earthquakes.properties.mag)
+    console.log(features[i].geometry.coordinates[1]);
 
-      L.circle(earthquakes.geometry.coordinates, {
-        fillOpacity: 0.75,
-        color: "white",
-        fillColor: selectColor(earthquakes.properties.mag),
+    var quakeMarker = L.circle([features[i].geometry.coordinates[1], features[i].geometry.coordinates[2]], {
+                        fillOpacity: 0.75,
+                        color: "white",
+                        fillColor: selectColor(features[i].properties.mag),
         
-        // Adjust radius
-        radius: selectRadius(earthquakes.properties.mag)
-      });
-      layer.bindPopup("<h3>" + earthquakes.properties.place +
-      "</h3><h3>Date/Time:" + new Date(earthquakes.properties.time) + 
-      "</h3><h3>Magnitude:" + (earthquakes.properties.mag) + "</h3>");
-      console.log(selectRadius(earthquakes.properties.mag));
+                        // Adjust radius
+                        radius: selectRadius(features[i].properties.mag)
+                      }).bindPopup("<h3>" + features[i].properties.place +
+                      "</h3><h3>Date/Time:" + new Date(features[i].properties.time) + 
+                      "</h3><h3>Magnitude:" + (features[i].properties.mag) + "</h3>");
       
+    console.log(quakeMarker);                 
       
-    };
-       
+    quakeMarkers.push(quakeMarker);
+      
+  };
+  console.log(quakeMarkers);
     //Create GeoJSON layer for map
-  var quakes = L.geoJSON(earthquakes, {
-      onEachFeature: onEachFeature
-  });
-
-  createMap(quakes);
-
+    //var quakes = L.geoJSON(earthquakes, {
+    //onEachFeature: onEachFeature
+    //});
+  createMap(L.layerGroup(quakeMarkers));
 };
+  
+
+
 
 function createMap(quakes) {
 
@@ -132,5 +139,5 @@ d3.json(url, function(earthquakes){
 
   console.log(earthquakes);
     //Send data.features object to createfeatures function
-    createFeatures(earthquakes);
+    createMarkers(earthquakes);
 });
