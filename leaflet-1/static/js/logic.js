@@ -1,71 +1,79 @@
 //Create function to map earthquake data
 
-function createFeatures(data.features) {
+function createFeatures(earthquakesData) {
 
     // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
 
   function onEachFeature(feature) {
 
+    var placeMarkers = [];
+
     
-    for (var i = 0; i < earthquakes.length; i++) {
+    for (var i = 0; i < earthquakesData.length; i++) {
 
       var color = "";
 
-      if (earthquakes[i].mag > 7) {
+      console.log(earthquakesData[i].properties.mag);
+
+      if (earthquakesData[i].properties.mag > 7) {
         color = "red";
       }
-      else if (earthquakes[i].mag > 6) {
+      else if (earthquakesData[i].properties.mag > 6) {
         color = "orange";
       }
-      else if (earthquakes[i].mag > 5) {
+      else if (earthquakesData[i].properties.mag > 5) {
         color = "yellow";
       }
-      else if (earthquakes[i].mag > 4) {
+      else if (earthquakesData[i].properties.mag > 4) {
         color = "brown";
       }
-      else if (earthquakes[i].mag > 3) {
+      else if (earthquakesData[i].properties.mag > 3) {
         color = "blue";
       }
-      else if (earthquakes[i].mag > 2) {
+      else if (earthquakesData[i].properties.mag > 2) {
         color = "purple";
       }
-      else if (earthquakes[i].mag > 1) {
+      else if (earthquakesData[i].properties.mag > 1) {
         color = "green";
       }
       else {
       color = "black";
       }
+
+      console.log(color)
   
       // Add circles to map
-      L.circle(earthquakes[i].place, {
-        fillOpacity: 0.75,
-        color: "white",
-        fillColor: color,
-        // Adjust radius
-        radius: earthquakes[i].mag * 1500
-      }).bindPopup("<h3>" + feature.properties.place +
-      "</h3><h3>Date/Time:" + new Date(feature.properties.time) + 
-      "</h3><h3>Magnitude:" + (feature.properties.mag) + "</h3>");
+
+      placeMarkers.push(
+        L.circle(earthquakesData[i].properties.place, {
+          fillOpacity: 0.75,
+          color: "white",
+          fillColor: color,
+          // Adjust radius
+          radius: earthquakesData[i].properties.mag * 1500
+      }).bindPopup("<h3>" + earthquakesData[i].properties.place +
+      "</h3><h3>Date/Time:" + new Date(earthquakesData[i].properties.time) + 
+      "</h3><h3>Magnitude:" + (earthquakesData[i].properties.mag) + "</h3>"));
   
     };
-  
-    createMap(earthquakes);
+  console.log(placeMarkers);
+   
   };
   
 
 
 
   //Create GeoJSON layer for map
-  var earthquakes = L.geoJSON(earthquakes, {
+  var quakes = L.geoJSON(earthquakesData, {
       onEachFeature: onEachFeature
   });
 
-  createMap(earthquakes);
+  createMap(L.layerGroup(placeMarkers));
 
 };
 
-function createMap(earthquakes) {
+function createMap(quakes) {
 
     //Add streetmap
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -110,7 +118,9 @@ function createMap(earthquakes) {
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 //Perform get request to url
-d3.json(url, function(data){
+d3.json(url, function(earthquakes){
+
+  console.log(earthquakes);
     //Send data.features object to createfeatures function
-    createFeatures(data.features);
+    createFeatures(earthquakes.features);
 });
