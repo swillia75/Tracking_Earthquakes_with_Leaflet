@@ -5,7 +5,7 @@ function createFeatures(earthquakesData) {
     // Define a function we want to run once for each feature in the features array
   // Give each feature a popup describing the place and time of the earthquake
 
-  function onEachFeature(feature) {
+  function onEachFeature(features) {
 
     var placeMarkers = [];
 
@@ -52,12 +52,14 @@ function createFeatures(earthquakesData) {
           fillColor: color,
           // Adjust radius
           radius: earthquakesData[i].properties.mag * 1500
-      }).bindPopup("<h3>" + earthquakesData[i].properties.place +
-      "</h3><h3>Date/Time:" + new Date(earthquakesData[i].properties.time) + 
-      "</h3><h3>Magnitude:" + (earthquakesData[i].properties.mag) + "</h3>"));
-  
+        }).bindPopup("<h3>" + earthquakesData[i].properties.place +
+        "</h3><h3>Date/Time:" + new Date(earthquakesData[i].properties.time) + 
+        "</h3><h3>Magnitude:" + (earthquakesData[i].properties.mag) + "</h3>"));
+      
+
+      
     };
-  console.log(placeMarkers);
+    console.log(placeMarkers);
    
   };
   
@@ -91,7 +93,7 @@ function createMap(quakes) {
 
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: quakes
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display on load
@@ -100,7 +102,7 @@ function createMap(quakes) {
       37.09, -95.71
     ],
     zoom: 5,
-    layers: [streetmap, earthquakes]
+    layers: [streetmap, quakes]
   });
 
   // Create a layer control
