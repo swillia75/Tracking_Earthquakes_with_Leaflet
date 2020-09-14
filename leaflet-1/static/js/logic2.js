@@ -45,17 +45,17 @@ d3.json(url, function(data) {
     };
     //Create circle markers and call selectColor and selectRadius for each feature
 
-    var quakeMarker = L.circle([features[i].geometry.coordinates[0], features[i].geometry.coordinates[1]], {
+    var quakeMarker = L.circleMarker([features[i].geometry.coordinates[1], features[i].geometry.coordinates[0]], {
       fillOpacity: 0.75,
       color: "white",
       fillColor: color,   
-      radius: features[i].properties.mag *15000
+      radius: features[i].properties.mag *3
 
       //Create popup for each marker
 
     }).bindPopup("<h3>" + features[i].properties.place +
     "</h3><h3>Date/Time:" + new Date(features[i].properties.time) + 
-    "</h3><h3>Magnitude:" + (features[i].properties.mag) + "</h3>");    
+    "</h3><h3>Magnitude:" + (features[i].properties.mag) + "</h3>"); 
 
     quakeMarkers.push(quakeMarker);
   
@@ -63,6 +63,8 @@ d3.json(url, function(data) {
   console.log(quakeMarkers);
 
   var quakes = L.layerGroup(quakeMarkers);
+
+  console.log(quakes);
 
   //Add streetmap layer
     
@@ -83,6 +85,8 @@ d3.json(url, function(data) {
     "Earthquakes": quakes
   };
 
+  console.log(quakes);
+
   //Create basemap
 
   var myMap = L.map("map", {
@@ -102,21 +106,17 @@ d3.json(url, function(data) {
   var legend = L.control({position: "bottomright"});
   legend.onAdd = function(map) {
     var div = L.DomUtil.create("div", "info legend");
-    var header = "<h1>Magnitude</h1>"
     var magnitude = ["Magnitude", "7", "6", "5", "4", "3", "2", "1", "<1"];
     var colorLabels = ["white", "red", "orange", "yellow", "brown", 
-                      "blue", "purple", "green", "black"];
+                      "blue", "purple", "green", "white"];
     
                     
 
     for (var i = 0; i < magnitude.length; i++) {
     
       div.innerHTML += 
-        "<li \"magnitude\">" + magnitude[i] + "</li>" +
-        "<li style = \"background-color:" + colorLabels[i] + "\">"+ "</li>" + 
-        "</div>";
+        "<li style = \"background-color:" + colorLabels[i] + "\">" + magnitude[i] +"</li>" + "</div>";
     
-
     };
     return div;
     
