@@ -60,24 +60,22 @@ d3.json(url, function(data) {
   
   };
 
+  //Link for getting plate data
+
   var link = "data/tectonicplates/GeoJSON/PB2002_boundaries.json"
 
   var mapStyle = {
     color: "maroon"
   };
 
-  // Grabbing our GeoJSON data..
+  // Grad plate GeoJSON data
   d3.json(link, function(data) {
-    // Creating a geoJSON layer with the retrieved data
+    // Create a geoJSON layer with the plate data
     var plates = L.geoJson(data.features, {
       // Passing in our style object
       style: mapStyle
     });
     
-
-  
-
-  
 
     //Create new layer group quakes
 
@@ -94,6 +92,8 @@ d3.json(url, function(data) {
       zoom: 5,
       layer: [streetmap, darkmap, satmap, quakes, plates]
     });
+
+    //Added streetmap layer
     
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -104,12 +104,16 @@ d3.json(url, function(data) {
       accessToken: API_KEY
     }).addTo(myMap);
 
+    //Added dark map layer
+
     var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
       maxZoom: 18,
       id: "dark-v10",
       accessToken: API_KEY
     }).addTo(myMap);
+
+    //Added satellite layer
     
     var satmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
