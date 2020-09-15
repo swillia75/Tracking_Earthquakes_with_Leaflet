@@ -150,7 +150,7 @@ d3.json(url, function(data) {
     var legend = L.control({position: "bottomright"});
     legend.onAdd = function(map) {
       var div = L.DomUtil.create("div", "info legend");
-      var magnitude = ["0-1", "1-2", "2-3", "3-4", "4-5", "+5"];
+      var magnitude = ["0-1 magnitude", "1-2 magnitude", "2-3 magnitude", "3-4 magnitude", "4-5 magnitude", "+5 magnitude"];
       var colorLabels = ["yellow", "green", "orange", "red", "blue", "purple"]; 
                         
       
